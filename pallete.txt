@@ -1,0 +1,5 @@
+Yellow #FFFFBC
+Green #97D4CD
+Cyan #6099BC
+Light Purple #7465A0
+Dark Purple #30103D
