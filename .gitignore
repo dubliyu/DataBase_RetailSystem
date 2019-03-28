@@ -1,0 +1,12 @@
+.vscode/
+.vs/
+node_modules/
+*.class
+*.tar
+*.swp
+*.out
+*.exe
+*.elf
+.0
+*.img
+*~

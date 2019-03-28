@@ -1,0 +1,27 @@
+{
+  "name": "database-final-retail",
+  "version": "1.0.0",
+  "description": "The Final project for Datavase, a retail mangement system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dubliyu/Database_RetailSystem.git"
+  },
+  "author": "Dubliyu, mwilson18",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dubliyu/Database_RetailSystem/issues"
+  },
+  "homepage": "https://github.com/dubliyu/Database_RetailSystem#readme",
+  "private": "true",
+  "dependencies": {
+    "express": "^4.16.4",
+    "pg": "^7.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
