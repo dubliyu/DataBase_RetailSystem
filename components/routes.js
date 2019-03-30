@@ -4,7 +4,7 @@
 const path = require("path");
 const express = require('express');
 const db = require("./db_connector");
-const router = express.Router();
+const router = require('express-promise-router')();
 
 //FUNCTIONS===================================================================
 function init(app){
@@ -25,6 +25,25 @@ function init(app){
 	});
 
 	// Define post routes
+	router.post("/login", async (req, res) => {
+		// Attempt to login user
+		let user_type = await db.login(req.body.username, req.body.password);
+
+		// Redirect to proper page or show error
+		switch(user_type){
+			case "customer":
+				res.redirect("/customer");
+				break;
+			case "employee":
+				res.redirect("/employee");
+				break;
+			case "error"
+				res.redirect("/login?error=true");
+				break;
+			default:
+				console.log("Unexpected user type: ", user_type);
+		}
+	});
 
 	// Catch all --> send home
 	router.get('/*', (req,res) => {
