@@ -33,15 +33,49 @@ function init(app){
 		switch(user_type){
 			case "customer":
 				res.redirect("/customer");
-				break;
 			case "employee":
 				res.redirect("/employee");
-				break;
 			case "error"
-				res.redirect("/login?error=true");
-				break;
+				res.json({ success: false });
 			default:
 				console.log("Unexpected user type: ", user_type);
+				res.json({ success: false });
+		}
+	});
+	router.post("/create_user", async (req, res) => {
+		// Check which type of creation is this
+		let user_type = req.body.user_type;
+
+		// Insert correct type of user
+		let result = null;
+		switch(user_type){
+			case "customer":
+				let cust = {
+					name: req.body.name,
+					email: req.body.email,
+					username: req.body.username,
+					password: req.body.password
+				};
+				result = await create_user_cust(cust);
+				break;
+			case "employee":
+				let emp = {
+					name: req.body.name,
+					pos: req.body.pos,
+					dept: req.body.dept,
+					username: req.body.username,
+					password: req.body.password
+				};
+				result = await create_user_emp(emp);
+				break;
+		}
+
+		// Send back results
+		if(result === null || !result){
+			res.json({ success: false });
+		}
+		else{
+			res.json({ success: true });
 		}
 	});
 

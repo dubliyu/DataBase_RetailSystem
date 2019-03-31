@@ -16,14 +16,23 @@ login_btn.addEventListener('click', (event) => {
 	let req = new XMLHttpRequest();
 	req.open("POST", window.location.host + "/login");
 	req.send(formData);
+
+	// Handle response
+	req.onreadystatechange = function() { 
+		if (req.readyState === 4 && req.status == 200){
+			// parse response
+			let response = req.responseText;
+			response = JSON.parse(response);
+
+			// check response
+			if(response.error === true){
+				// Get the msg container
+				msg_ctn = document.getElementById("msg_container");
+
+				// show the the div with the error message
+				error_ctn.innerText = "Bad login information";
+				error_msg.style.display = "block";
+			}
+		}
+    };
 });
-
-// Parse the url for a bad login
-if(window.location.search.substr(1) === "error=true"){
-	// Get the msg container
-	msg_ctn = document.getElementById("msg_container");
-
-	// show the the div with the error message
-	error_ctn.innerText = "Bad login information";
-	error_msg.style.display = "block";
-}

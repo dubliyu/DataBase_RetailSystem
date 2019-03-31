@@ -21,16 +21,116 @@ function GetConnector(app){
 }
 
 //PUBLIC FUNCTIONS===================================================================
-function test(){
-	// Get a new connector
-	let conn = GetConnector();
-	console.log("Connecting");
+function create_user_emp(employee){
+	return New Promise((resolve, reject) => {
+		// Validate input
+		if(employee.username.length === 0 || employee.password.length === 0){
+			reject(false);
+		}
 
-	// Make a query
-	conn.query('select * from "InStock";', (err, res) => {
-		console.log(err, res);
-		conn.end();
-	});
+		// Get a connection
+		let conn = GetConnector();
+		let query = 'INSERT INTO employees ("Name", "Position", "Department") VALUES ($1, $2, $3) Returning "EmpID";'
+		let values = [employee.name, employee.pos, employee.dept];
+
+		// Insert the query into the customer table
+		conn.query(query. values. (err1, res1) => {
+			// Check for error
+			if(err1){
+				reject(false);
+			}
+
+			// Get the new employee id
+			let empId = res1.rows[0].EmpID;
+
+			// Validate
+			if(typeof empId !== "number"){
+				reject(false);
+			}
+
+			// hash the password
+			bcrypt.hash(employee.password, 10, (err2, hash) => {
+				// Check error
+				if(err2){
+					reject(false);
+				}
+
+				// Set new query for users table
+				query = "INSERT INTO users (empid, username, password) VALUES ($1, $2, $3);";
+				values = [empId, username, password];
+
+				// Insert the query
+				conn.query(query, values, (err3, res3) => {
+					// Close the connection
+					conn.end();
+
+					// Check error
+					if(err3){
+						reject(false);
+					}
+
+					// If no error, then resolve true
+					resolve(true);
+				});
+			});
+		});
+	};
+}
+
+function create_user_cust(customer){
+	return New Promise((resolve, reject) => {
+		// Validate input
+		if(customer.username.length === 0 || customer.password.length === 0){
+			reject(false);
+		}
+
+		// Get a connection
+		let conn = GetConnector();
+		let query = 'INSERT INTO customers ("name", "email") VALUES ($1, $2) Returning "CustID";'
+		let values = [customer.name, customer.email];
+
+		// Insert the query into the customer table
+		conn.query(query. values. (err1, res1) => {
+			// Check for error
+			if(err1){
+				reject(false);
+			}
+
+			// Get the new employee id
+			let custID = res1.rows[0].CustID;
+
+			// Validate
+			if(typeof custID !== "number"){
+				reject(false);
+			}
+
+			// hash the password
+			bcrypt.hash(employee.password, 10, (err2, hash) => {
+				// Check error
+				if(err2){
+					reject(false);
+				}
+
+				// Set new query for users table
+				query = "INSERT INTO users (custid, username, password) VALUES ($1, $2, $3);";
+				values = [custID, username, password];
+
+				// Insert the query
+				conn.query(query, values, (err3, res3) => {
+					// Close the connection
+					conn.end();
+
+					// Check error
+					if(err3){
+						reject(false);
+					}
+
+					// If no error, then resolve true
+					resolve(true);
+				});
+			});
+		});
+	};
 }
 
 function login(username, password){
@@ -42,10 +142,10 @@ function login(username, password){
 
 		// Get a connection
 		let conn = GetConnector();
-		let query = 'select * from "Users" where "username"=$1;'
+		let query = 'select * from users where "username"=$1;';
 		let values = [username];
 
-			// Make a query
+		// Make a query
 		conn.query(query, values, (err1, res1) => {
 			// Close the connection
 			conn.end();
@@ -63,7 +163,15 @@ function login(username, password){
 				}
 
 				// We have valid match, return user type
-				resolve(res1.rows[0].userType);
+				if(res1.rows[0].empid !== "" && res1.rows[0].empid !== null){
+					resolve("employee");
+				}
+				else if(res1.rows.custid !== "" && res1.rows[0].custid !== null){
+					resolve("customer");
+				}
+				else{
+					resolve("error");
+				}
 			});
 		});
 	});
@@ -72,5 +180,6 @@ function login(username, password){
 //EXPORT===================================================================
 module.exports = {
 	login: login,
-	test: test
+	create_user_cust: create_user_cust,
+	create_user_emp: create_user_emp
 };
