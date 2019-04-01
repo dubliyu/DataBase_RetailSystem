@@ -22,7 +22,7 @@ function GetConnector(app){
 
 //PUBLIC FUNCTIONS===================================================================
 function create_user_emp(employee){
-	return New Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		// Validate input
 		if(employee.username.length === 0 || employee.password.length === 0){
 			reject(false);
@@ -34,7 +34,7 @@ function create_user_emp(employee){
 		let values = [employee.name, employee.pos, employee.dept];
 
 		// Insert the query into the customer table
-		conn.query(query. values. (err1, res1) => {
+		conn.query(query. values, (err1, res1) => {
 			// Check for error
 			if(err1){
 				reject(false);
@@ -74,11 +74,11 @@ function create_user_emp(employee){
 				});
 			});
 		});
-	};
+	});
 }
 
 function create_user_cust(customer){
-	return New Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		// Validate input
 		if(customer.username.length === 0 || customer.password.length === 0){
 			reject(false);
@@ -90,7 +90,7 @@ function create_user_cust(customer){
 		let values = [customer.name, customer.email];
 
 		// Insert the query into the customer table
-		conn.query(query. values. (err1, res1) => {
+		conn.query(query. values, (err1, res1) => {
 			// Check for error
 			if(err1){
 				reject(false);
@@ -130,11 +130,11 @@ function create_user_cust(customer){
 				});
 			});
 		});
-	};
+	});
 }
 
 function login(username, password){
-	return New Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		// Validate input
 		if(username.length === 0 || password.length === 0){
 			reject("error");

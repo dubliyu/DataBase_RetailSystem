@@ -29,13 +29,15 @@ function init(app){
 		// Attempt to login user
 		let user_type = await db.login(req.body.username, req.body.password);
 
+		// Add cookie
+
 		// Redirect to proper page or show error
 		switch(user_type){
 			case "customer":
 				res.redirect("/customer");
 			case "employee":
 				res.redirect("/employee");
-			case "error"
+			case "error":
 				res.json({ success: false });
 			default:
 				console.log("Unexpected user type: ", user_type);
@@ -68,6 +70,8 @@ function init(app){
 				};
 				result = await create_user_emp(emp);
 				break;
+			default:
+				console.log("Unexpected user type: ", req.body.name);
 		}
 
 		// Send back results
