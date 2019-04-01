@@ -25,7 +25,7 @@ login_btn.addEventListener('click', (event) => {
 			response = JSON.parse(response);
 
 			// check response
-			if(response.error === true){
+			if(response.success === false){
 				// Get the msg container
 				msg_ctn = document.getElementById("msg_container");
 
@@ -36,3 +36,15 @@ login_btn.addEventListener('click', (event) => {
 		}
     };
 });
+
+// Add event listener to create login btn
+let create_btn = document.getElementById("create_user");
+create_btn.addEventListener('click', (event) => {
+	// Clear all the crate input fields
+	
+	// Show a div with a higher z index positioned absolutly in the middle of the page
+
+});
+
+// Add event listener to the create login submit btn
+
