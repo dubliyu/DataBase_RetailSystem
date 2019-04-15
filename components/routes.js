@@ -5,9 +5,14 @@ const path = require("path");
 const express = require('express');
 const db = require("./db_connector");
 const router = require('express-promise-router')();
+const cookieLogic = require("./cookie_logic");
+const multer = require('multer')();
 
 //FUNCTIONS===================================================================
 function init(app){
+	// Use cookie parser
+	app.use(cookieLogic.add_cookie);
+
 	// Defined routes for static files
 	app.use("/css", express.static(path.join(__dirname, "..", 'public/css')));
 	app.use("/js", express.static(path.join(__dirname, "..", 'public/js')));
@@ -25,57 +30,40 @@ function init(app){
 	});
 
 	// Define post routes
-	router.post("/login", async (req, res) => {
+	router.post("/login", multer.fields([]), async (req, res) => {
 		// Attempt to login user
 		let user_type = await db.login(req.body.username, req.body.password);
-
-		// Add cookie
-
+		console.log(user_type);
 		// Redirect to proper page or show error
 		switch(user_type){
 			case "customer":
+				cookieLogic.create_user('customer', req);
 				res.redirect("/customer");
 			case "employee":
+				cookieLogic.create_user('employee', req);
 				res.redirect("/employee");
 			case "error":
 				res.json({ success: false });
 			default:
 				console.log("Unexpected user type: ", user_type);
-				res.json({ success: false });
 		}
 	});
-	router.post("/create_user", async (req, res) => {
+	router.post("/create_user", multer.fields([]), async (req, res) => {
 		// Check which type of creation is this
 		let user_type = req.body.user_type;
 
-		// Insert correct type of user
-		let result = null;
-		switch(user_type){
-			case "customer":
-				let cust = {
-					name: req.body.name,
-					email: req.body.email,
-					username: req.body.username,
-					password: req.body.password
-				};
-				result = await create_user_cust(cust);
-				break;
-			case "employee":
-				let emp = {
-					name: req.body.name,
-					pos: req.body.pos,
-					dept: req.body.dept,
-					username: req.body.username,
-					password: req.body.password
-				};
-				result = await create_user_emp(emp);
-				break;
-			default:
-				console.log("Unexpected user type: ", req.body.name);
-		}
+		// Insert customer
+		let cust = {
+			name: req.body.name,
+			email: req.body.email,
+			username: req.body.username,
+			password: req.body.password
+		};
+		let success = await db.create_user_cust(cust);
+
 
 		// Send back results
-		if(result === null || !result){
+		if(!success){
 			res.json({ success: false });
 		}
 		else{

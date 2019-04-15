@@ -21,62 +21,6 @@ function GetConnector(app){
 }
 
 //PUBLIC FUNCTIONS===================================================================
-function create_user_emp(employee){
-	return new Promise((resolve, reject) => {
-		// Validate input
-		if(employee.username.length === 0 || employee.password.length === 0){
-			reject(false);
-		}
-
-		// Get a connection
-		let conn = GetConnector();
-		let query = 'INSERT INTO employees ("Name", "Position", "Department") VALUES ($1, $2, $3) Returning "EmpID";'
-		let values = [employee.name, employee.pos, employee.dept];
-
-		// Insert the query into the customer table
-		conn.query(query. values, (err1, res1) => {
-			// Check for error
-			if(err1){
-				reject(false);
-			}
-
-			// Get the new employee id
-			let empId = res1.rows[0].EmpID;
-
-			// Validate
-			if(typeof empId !== "number"){
-				reject(false);
-			}
-
-			// hash the password
-			bcrypt.hash(employee.password, 10, (err2, hash) => {
-				// Check error
-				if(err2){
-					reject(false);
-				}
-
-				// Set new query for users table
-				query = "INSERT INTO users (empid, username, password) VALUES ($1, $2, $3);";
-				values = [empId, username, password];
-
-				// Insert the query
-				conn.query(query, values, (err3, res3) => {
-					// Close the connection
-					conn.end();
-
-					// Check error
-					if(err3){
-						reject(false);
-					}
-
-					// If no error, then resolve true
-					resolve(true);
-				});
-			});
-		});
-	});
-}
-
 function create_user_cust(customer){
 	return new Promise((resolve, reject) => {
 		// Validate input
@@ -90,7 +34,7 @@ function create_user_cust(customer){
 		let values = [customer.name, customer.email];
 
 		// Insert the query into the customer table
-		conn.query(query. values, (err1, res1) => {
+		conn.query(query, values, (err1, res1) => {
 			// Check for error
 			if(err1){
 				reject(false);
@@ -105,7 +49,7 @@ function create_user_cust(customer){
 			}
 
 			// hash the password
-			bcrypt.hash(employee.password, 10, (err2, hash) => {
+			bcrypt.hash(customer.password, 10, (err2, hash) => {
 				// Check error
 				if(err2){
 					reject(false);
@@ -113,7 +57,9 @@ function create_user_cust(customer){
 
 				// Set new query for users table
 				query = "INSERT INTO users (custid, username, password) VALUES ($1, $2, $3);";
-				values = [custID, username, password];
+				values = [custID, customer.username, hash];
+				console.log(query);
+				console.log(values);
 
 				// Insert the query
 				conn.query(query, values, (err3, res3) => {
@@ -136,7 +82,7 @@ function create_user_cust(customer){
 function login(username, password){
 	return new Promise((resolve, reject) => {
 		// Validate input
-		if(username.length === 0 || password.length === 0){
+		if(!username || username.length === 0 || password.length === 0){
 			reject("error");
 		}
 
@@ -155,6 +101,12 @@ function login(username, password){
 				reject("error");
 			}
 
+			// Check for no rows
+			if(res1.rowCount == 0){
+				resolve('error');
+				return;
+			}
+
 			// Compare the hash
 			bcrypt.compare(password, res1.rows[0].hash, (err2, res2) => {
 				// If bad match or error
@@ -166,7 +118,7 @@ function login(username, password){
 				if(res1.rows[0].empid !== "" && res1.rows[0].empid !== null){
 					resolve("employee");
 				}
-				else if(res1.rows.custid !== "" && res1.rows[0].custid !== null){
+				else if(res1.rows[0].custid !== "" && res1.rows[0].custid !== null){
 					resolve("customer");
 				}
 				else{
@@ -180,6 +132,5 @@ function login(username, password){
 //EXPORT===================================================================
 module.exports = {
 	login: login,
-	create_user_cust: create_user_cust,
-	create_user_emp: create_user_emp
+	create_user_cust: create_user_cust
 };
