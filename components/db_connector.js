@@ -25,7 +25,8 @@ function create_user_cust(customer){
 	return new Promise((resolve, reject) => {
 		// Validate input
 		if(customer.username.length === 0 || customer.password.length === 0){
-			reject(false);
+			reject("error");
+			return;
 		}
 
 		// Get a connection
@@ -37,7 +38,8 @@ function create_user_cust(customer){
 		conn.query(query, values, (err1, res1) => {
 			// Check for error
 			if(err1){
-				reject(false);
+				reject("error");
+				return;
 			}
 
 			// Get the new employee id
@@ -45,14 +47,16 @@ function create_user_cust(customer){
 
 			// Validate
 			if(typeof custID !== "number"){
-				reject(false);
+				reject("error");
+				return;
 			}
 
 			// hash the password
 			bcrypt.hash(customer.password, 10, (err2, hash) => {
 				// Check error
 				if(err2){
-					reject(false);
+					reject("error");
+					return;
 				}
 
 				// Set new query for users table
@@ -68,11 +72,12 @@ function create_user_cust(customer){
 
 					// Check error
 					if(err3){
-						reject(false);
+						reject("error");
+						return;
 					}
 
 					// If no error, then resolve true
-					resolve(true);
+					resolve("success");
 				});
 			});
 		});
@@ -84,6 +89,7 @@ function login(username, password){
 		// Validate input
 		if(!username || username.length === 0 || password.length === 0){
 			reject("error");
+			return;
 		}
 
 		// Get a connection
@@ -97,13 +103,8 @@ function login(username, password){
 			conn.end();
 
 			// Check for error
-			if(err1){
+			if(err1 || res1.rowCount == 0){
 				reject("error");
-			}
-
-			// Check for no rows
-			if(res1.rowCount == 0){
-				resolve('error');
 				return;
 			}
 
@@ -112,6 +113,7 @@ function login(username, password){
 				// If bad match or error
 				if(!res2 || err2){
 					reject("error");
+					return;
 				}
 
 				// We have valid match, return user type

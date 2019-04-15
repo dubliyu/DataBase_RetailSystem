@@ -59,11 +59,11 @@ function init(app){
 			username: req.body.username,
 			password: req.body.password
 		};
-		let success = await db.create_user_cust(cust);
+		let result = await db.create_user_cust(cust);
 
 
 		// Send back results
-		if(!success){
+		if(result === "error"){
 			res.json({ success: false });
 		}
 		else{
