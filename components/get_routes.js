@@ -7,11 +7,13 @@ function apply_get(router, cookieLogic, path, express){
 		res.sendFile(path.join(__dirname, '..', '/public/html/login.html'));
 	});
 	router.get("/home", (req, res) => {
-		if(cookieLogic.get_user_type(req) == "error"){
+		let type = cookieLogic.get_user_type(req)
+		if(type == "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
-			res.sendFile(path.join(__dirname, '..', '/public/html/home.html'));
+			res.render('home.ejs', {user_type: type});
+			//res.sendFile(path.join(__dirname, '..', '/public/html/home.html'));
 		}
 	});
 	router.get("/about", (req, res) => {

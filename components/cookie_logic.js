@@ -31,7 +31,7 @@ function get_user_type(req){
 	if(user_index === undefined || user_index === null){
 		return "error";
 	}
-	return Users[user_index].track_id;
+	return Users[user_index].type;
 }
 
 function remove_user(){

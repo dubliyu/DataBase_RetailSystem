@@ -6,7 +6,6 @@ function apply_post(router, multer, db, cookieLogic){
 		// Define post routes
 	router.post("/login", multer.fields([]), async (req, res) => {
 		// Attempt to login user
-		console.log(req.cookies);
 		let user_type = await db.login(req.body.username, req.body.password);
 		
 		// Redirect to proper page or show error
@@ -50,7 +49,6 @@ function apply_post(router, multer, db, cookieLogic){
 		}
 	});
 	router.post("/logout", multer.fields([]), async (req, res) => {
-		console.log("here");
 		cookieLogic.remove_user(req);
 		res.clearCookie('track_id');
 		res.json({redirect: "/login"});

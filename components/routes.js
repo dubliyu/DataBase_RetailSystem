@@ -13,6 +13,9 @@ const cookie_parser = require('cookie-parser');
 
 //FUNCTIONS===================================================================
 function init(app){
+	// Set view engine
+	app.set('view engine', 'ejs');
+	
 	// Use cookie parser
 	app.use(cookie_parser());
 	app.use(cookieLogic.add_cookie);
