@@ -53,6 +53,7 @@ nav{
 	border-radius: 5px;
 	background-color: lightgrey;
 	border: none;
+	padding: 4px;
 }
 .form-input{
 	display: flex;
@@ -82,4 +83,15 @@ label{
 }
 .important:active{
 	transform: translate(0, 2px);
+}
+#msg_container{
+	text-align: center;
+    padding: 5px;
+    color: salmon;
+    font-size: 1.2em;
+    border: 2px solid salmon;
+}
+.green{
+	color: lightgreen !important;
+    border: 2px solid darkseagreen !important;
 }

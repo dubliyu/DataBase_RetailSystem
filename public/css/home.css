@@ -27,9 +27,20 @@ nav{
 	text-decoration: none;
 	margin: 0 15px;
 	color: #f5f1f1;
+	cursor: pointer;
 }
 .nav-link:hover{
 	color: #30103D;
+}
+.nav-link-box{
+	font-size: 1.5em;
+	text-decoration: none;
+	margin: 0 15px;
+	color: #f5f1f1;
+	cursor: pointer;
+}
+.nav-link-box:hover{
+	color: #FFFFBC;
 }
 
 .link-border{
@@ -46,7 +57,9 @@ nav{
 .logo-img{
 	height: 100%;
 }
-
+.logo-container{
+	width: 200px;
+}
 .content{
 	height: 74vh;
 	display: flex;

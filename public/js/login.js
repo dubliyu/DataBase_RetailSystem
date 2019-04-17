@@ -30,8 +30,14 @@ login_btn.addEventListener('click', (event) => {
 				let msg_ctn = document.getElementById("msg_container");
 
 				// show the the div with the error message
-				msg_ctn.innerText = "Bad login information";
+				msg_ctn.innerText = "Incorrect Username/Password";
 				msg_ctn.style.display = "block";
+			}
+			else{
+				// redirect
+				if(typeof response.redirect === 'string'){
+					window.location = response.redirect;
+				}
 			}
 		}
 	};
@@ -94,15 +100,24 @@ submit_btn.addEventListener('click', (event) => {
 			// parse response
 			let response = req.responseText;
 			response = JSON.parse(response);
+			
+			// Get the msg container
+			let msg_ctn = document.getElementById("msg_container");
 
 			// check response
 			if(response.success === false){
-				// Get the msg container
-				let msg_ctn = document.getElementById("msg_container");
-
 				// show the the div with the error message
 				msg_ctn.innerText = "Bad login information";
 				msg_ctn.style.display = "block";
+			}
+			else{
+				// show the the div with the error message
+				msg_ctn.innerText = "Account Created";
+				msg_ctn.style.display = "block";
+				msg_ctn.classList.add("green");
+
+				// Show login
+				create_btn.click()
 			}
 		}
 	};

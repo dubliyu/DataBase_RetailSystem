@@ -25,7 +25,7 @@ function create_user_cust(customer){
 	return new Promise((resolve, reject) => {
 		// Validate input
 		if(customer.username.length === 0 || customer.password.length === 0){
-			reject("error");
+			resolve("error");
 			return;
 		}
 
@@ -38,7 +38,7 @@ function create_user_cust(customer){
 		conn.query(query, values, (err1, res1) => {
 			// Check for error
 			if(err1){
-				reject("error");
+				resolve("error");
 				return;
 			}
 
@@ -47,7 +47,7 @@ function create_user_cust(customer){
 
 			// Validate
 			if(typeof custID !== "number"){
-				reject("error");
+				resolve("error");
 				return;
 			}
 
@@ -55,15 +55,13 @@ function create_user_cust(customer){
 			bcrypt.hash(customer.password, 10, (err2, hash) => {
 				// Check error
 				if(err2){
-					reject("error");
+					resolve("error");
 					return;
 				}
 
 				// Set new query for users table
 				query = "INSERT INTO users (custid, username, password) VALUES ($1, $2, $3);";
 				values = [custID, customer.username, hash];
-				console.log(query);
-				console.log(values);
 
 				// Insert the query
 				conn.query(query, values, (err3, res3) => {
@@ -72,7 +70,7 @@ function create_user_cust(customer){
 
 					// Check error
 					if(err3){
-						reject("error");
+						resolve("error");
 						return;
 					}
 
@@ -88,13 +86,13 @@ function login(username, password){
 	return new Promise((resolve, reject) => {
 		// Validate input
 		if(!username || username.length === 0 || password.length === 0){
-			reject("error");
+			resolve("error");
 			return;
 		}
 
 		// Get a connection
 		let conn = GetConnector();
-		let query = 'select * from users where "username"=$1;';
+		let query = 'select * from users u left join employees e on u.empid = e."EmpID" where "username"=$1;';
 		let values = [username];
 
 		// Make a query
@@ -104,21 +102,26 @@ function login(username, password){
 
 			// Check for error
 			if(err1 || res1.rowCount == 0){
-				reject("error");
+				resolve("error");
 				return;
 			}
 
 			// Compare the hash
-			bcrypt.compare(password, res1.rows[0].hash, (err2, res2) => {
+			bcrypt.compare(password, res1.rows[0].password, (err2, res2) => {
 				// If bad match or error
 				if(!res2 || err2){
-					reject("error");
+					resolve("error");
 					return;
 				}
 
 				// We have valid match, return user type
 				if(res1.rows[0].empid !== "" && res1.rows[0].empid !== null){
-					resolve("employee");
+					if(res1.rows[0].Position === "Manager"){
+						resolve("manager");
+					}
+					else{
+						resolve("employee");						
+					}
 				}
 				else if(res1.rows[0].custid !== "" && res1.rows[0].custid !== null){
 					resolve("customer");
