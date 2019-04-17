@@ -13,7 +13,6 @@ function apply_get(router, cookieLogic, path, express){
 		}
 		else{
 			res.render('home.ejs', {user_type: type});
-			//res.sendFile(path.join(__dirname, '..', '/public/html/home.html'));
 		}
 	});
 	router.get("/about", (req, res) => {
