@@ -1,9 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="css/stores.css" />
     </head>
     <body>
+        <!-- <% if(user_type !== "customer") { %> 
+            <div class="header" style="background-color: #7465A0">
+        <% } else { %> -->
+            <div class="header">
+        <!--<% } %>-->
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+                <div class="links-container">
+                    <a href="/home" class="nav-link">Home</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/about" class="nav-link">About</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/stores" class="nav-link">Stores</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/profile" class="nav-link">Profile</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="#" id="logout_btn" class="nav-link">Log out</a>
+                </div>
+            </nav>
+        </div>
 
+        <div class="content">
+            <div class="table-desc">
+                <h4>Profile</h4>
+            </div>
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <td> </td>
+                    <td><button class="editbtn">Edit</button></td>
+                </tr>
+                <tr>
+                    <th>Last Name</th>
+                    <td> </td>
+                    <td><button class="editbtn">Edit</button></td>
+                </tr>
+                <tr>
+                    <th>CustID</th> <!--Customers only-->
+                    <td> </td> <!--Not editable-->
+                </tr>
+                <tr>
+                    <th>EmpID</th> <!--Employees & Managers only-->
+                    <td> </td> <!--Not editable-->
+                </tr>   
+                <tr>
+                    <th>Email</th> <!--Customers only-->
+                    <td> </td>
+                    <td><button class="editbtn">Edit</button></td>
+                </tr>   
+                <tr>
+                    <th>Position</th> <!--Employees and Managers only-->
+                    <td> </td> <!--Not editable-->
+                </tr>          
+                <tr>
+                    <th>Department</th> <!--Employees and Managers only-->
+                    <td> </td> <!--Not editable-->
+                </tr>
+            </table>
+        </div>
+
+        <div class="footer">
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+            </nav>
+        </div>
+        <script type="text/javascript" src="js/general.js"></script>
     </body>
 </html>
