@@ -210,7 +210,6 @@ function get_profile(user){
 function update_user(user, name, email){
 	return new Promise((resolve, reject) => {
 		// Validate input
-		console.log(user, name, email);
 		if(typeof email !== "undefined"){
 			// Check email
 			let email_pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; 
@@ -244,7 +243,6 @@ function update_user(user, name, email){
 			query = 'UPDATE employees SET "Name"=$1 WHERE "EmpID"=$2;'
 			values.unshift(name);	
 		}
-		console.log(query, values);
 
 		// Get a connection
 		let conn = GetConnector();
@@ -252,7 +250,6 @@ function update_user(user, name, email){
 		// Make a query
 		conn.query(query, values, (err1, res1) => {
 			if(err1 ){
-				console.log(err1);
 				resolve("error");
 			}else{
 				resolve("success");
