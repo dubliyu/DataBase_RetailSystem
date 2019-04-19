@@ -181,6 +181,46 @@ function get_transactions(user){
 	});
 }
 
+function get_stores(state, name){
+	return new Promise((resolve, reject) => {
+		// Construct query
+		let query = 'select * from stores ';
+		let values = [];
+		if(state || name){
+			where = "where "
+			if(state && name){
+				where += '"State"=$1 and "StoreName"=$2'
+				values.push(state, name);
+			}
+			else if(state){
+				where += '"State"=$1';
+				values.push(state);
+			}
+			else if(name){
+				where += '"StoreName"=$1';
+				values.push(name);
+			}
+			else{
+				where = "";
+			}
+			query += where + ";";
+		}
+
+
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				resolve("error");
+			}else{
+				resolve(res1.rows);
+			}
+		});
+	});
+}
+
 function get_profile(user){
 	return new Promise((resolve, reject) => {
 		// Construct query
@@ -264,5 +304,6 @@ module.exports = {
 	create_user_cust: create_user_cust,
 	get_transactions: get_transactions,
 	get_profile: get_profile,
-	update_user: update_user
+	update_user: update_user,
+	get_stores: get_stores
 };

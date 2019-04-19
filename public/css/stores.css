@@ -147,3 +147,15 @@ input[type=text] {
 tr:nth-child(even) {
 	background-color: #f2f2f2
 }
+
+#msg_container{
+	text-align: center;
+    padding: 15px;
+    color: salmon;
+    font-size: 1.2em;
+    border: 2px solid salmon;
+}
+.green{
+	color: lightgreen !important;
+    border: 2px solid darkseagreen !important;
+}

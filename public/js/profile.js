@@ -1,3 +1,5 @@
+'use strict';
+
 // Function contains profile events
 let name_edit = document.getElementById("name_edit");
 name_edit.addEventListener('click', (event) => {

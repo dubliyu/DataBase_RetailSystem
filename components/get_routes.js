@@ -23,12 +23,14 @@ function apply_get(router, cookieLogic, path, express, db){
 			res.sendFile(path.join(__dirname, '..', '/public/html/about.html'));
 		}
 	});
-	router.get("/stores", (req, res) => {
-		if(cookieLogic.get_user_type(req) == "error"){
+	router.get("/stores", async (req, res) => {
+		let user = cookieLogic.get_user(req);
+		if(user === "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
-			res.sendFile(path.join(__dirname, '..', '/public/html/stores.html'));
+			let stores = await db.get_stores(undefined, undefined);
+			res.render('stores.ejs', {user_type: user.type, stores: stores});
 		}
 	});
 	router.get("/transactions", async (req, res) => {
