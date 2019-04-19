@@ -33,12 +33,11 @@ function apply_get(router, cookieLogic, path, express, db){
 	});
 	router.get("/transactions", async (req, res) => {
 		let user = cookieLogic.get_user(req);
-		if(user.type == "error"){
+		if(user === "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
 			let trans_arr = await db.get_transactions(user);
-			console.log(trans_arr);
 			res.render('transactions.ejs', {user_type: user.type, all_trans: trans_arr});
 		}
 	});
@@ -50,12 +49,15 @@ function apply_get(router, cookieLogic, path, express, db){
 			res.sendFile(path.join(__dirname, '..', '/public/html/stock.html'));
 		}
 	});
-	router.get("/profile", (req, res) => {
-		if(cookieLogic.get_user_type(req) == "error"){
+	router.get("/profile", async (req, res) => {
+		let user = cookieLogic.get_user(req);
+		if(user === "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
-			res.sendFile(path.join(__dirname, '..', '/public/html/profile.html'));
+			let profile = await db.get_profile(user);
+			profile.user_type = user.type;
+			res.render('profile.ejs', profile);
 		}
 	});
 	router.get("/comments", (req, res) => {

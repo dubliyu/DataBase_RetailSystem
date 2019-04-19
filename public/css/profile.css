@@ -126,3 +126,15 @@ input[type=text] {
 input[type=text]:focus{
 	border: 2px solid #555555
 }
+
+#msg_container{
+	text-align: center;
+    padding: 15px;
+    color: salmon;
+    font-size: 1.2em;
+    border: 2px solid salmon;
+}
+.green{
+	color: lightgreen !important;
+    border: 2px solid darkseagreen !important;
+}

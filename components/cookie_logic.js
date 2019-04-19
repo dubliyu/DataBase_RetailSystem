@@ -51,7 +51,6 @@ function get_user_type(req){
 	}
 	user_index = User_hash[req.cookies.track_id]
 	if(user_index === undefined || user_index === null){
-		console.log(1);
 		return "error";
 	}
 	return Users[user_index].type;

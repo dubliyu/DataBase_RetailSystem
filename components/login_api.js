@@ -3,7 +3,7 @@
 
 //PUBLIC FUNCTIONS===================================================================
 function apply_post(router, multer, db, cookieLogic){
-		// Define post routes
+	// Define post routes
 	router.post("/login", multer.fields([]), async (req, res) => {
 		// Attempt to login user
 		let user = await db.login(req.body.username, req.body.password);

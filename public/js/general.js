@@ -1,6 +1,6 @@
 // Function contains general javascript code for all the files
-let login_btn = document.getElementById("logout_btn");
-login_btn.addEventListener('click', (event) => {
+let logout_btn = document.getElementById("logout_btn");
+logout_btn.addEventListener('click', (event) => {
 		// Make form object
 	let formData = new FormData();
 	formData.append("command", "logout");

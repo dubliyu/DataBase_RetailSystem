@@ -28,6 +28,11 @@ function create_user_cust(customer){
 			resolve("error");
 			return;
 		}
+		let email_pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; 
+		if(customer.name.length === 0 || customer.email.length === 0 || !email_pattern.test(customer.email) ){
+			resolve("error");
+			return;
+		}
 
 		// Get a connection
 		let conn = GetConnector();
@@ -129,7 +134,7 @@ function login(username, password){
 					}
 				}
 				else if(res1.rows[0].custid !== "" && res1.rows[0].custid !== null){
-					user.id = res1.rows[0].CustID;
+					user.id = res1.rows[0].custid;
 					user.type = "customer";
 					resolve(user);
 				}
@@ -176,9 +181,91 @@ function get_transactions(user){
 	});
 }
 
+function get_profile(user){
+	return new Promise((resolve, reject) => {
+		// Construct query
+		let query = '';
+		if(user.type === "customer"){
+			query = 'SELECT * FROM customers WHERE "CustID"=$1;'
+		}
+		else{
+			query = 'SELECT *, "Name" AS name FROM employees WHERE "EmpID"=$1;'
+		}
+
+		// Get a connection
+		let values = [user.id];
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				resolve("error");
+			}else{
+				resolve(res1.rows[0]);
+			}
+		});
+	});
+}
+
+function update_user(user, name, email){
+	return new Promise((resolve, reject) => {
+		// Validate input
+		console.log(user, name, email);
+		if(typeof email !== "undefined"){
+			// Check email
+			let email_pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; 
+			if(email.length === 0 || !email_pattern.test(email)){
+				resolve("error");
+				return;
+			}
+		}
+		else{
+			// Check name
+			if(name.length === 0){
+				resolve("error");
+				return;
+			}
+		}
+
+		// Construct query
+		let query = '';
+		let values = [user.id];
+		if(user.type === "customer"){
+			if(typeof name === "undefined"){
+				query = 'UPDATE customers SET email=$1 WHERE "CustID"=$2;'
+				values.unshift(email);
+			}
+			else{
+				query = 'UPDATE customers SET name=$1 WHERE "CustID"=$2;'
+				values.unshift(name);
+			}
+		}
+		else{
+			query = 'UPDATE employees SET "Name"=$1 WHERE "EmpID"=$2;'
+			values.unshift(name);	
+		}
+		console.log(query, values);
+
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				console.log(err1);
+				resolve("error");
+			}else{
+				resolve("success");
+			}
+		});
+	});
+}
+
 //EXPORT===================================================================
 module.exports = {
 	login: login,
 	create_user_cust: create_user_cust,
-	get_transactions: get_transactions
+	get_transactions: get_transactions,
+	get_profile: get_profile,
+	update_user: update_user
 };
