@@ -113,18 +113,25 @@ function login(username, password){
 					resolve("error");
 					return;
 				}
+				// Create obj
+				let user = {};
 
 				// We have valid match, return user type
 				if(res1.rows[0].empid !== "" && res1.rows[0].empid !== null){
+					user.id = res1.rows[0].EmpID;
 					if(res1.rows[0].Position === "Manager"){
-						resolve("manager");
+						user.type = "manager";
+						resolve(user);
 					}
 					else{
-						resolve("employee");						
+						user.type = "employee";
+						resolve(user);						
 					}
 				}
 				else if(res1.rows[0].custid !== "" && res1.rows[0].custid !== null){
-					resolve("customer");
+					user.id = res1.rows[0].CustID;
+					user.type = "customer";
+					resolve(user);
 				}
 				else{
 					resolve("error");
@@ -134,8 +141,44 @@ function login(username, password){
 	});
 }
 
+function get_transactions(user){
+	return new Promise((resolve, reject) => {
+		// Construct query
+		let values = [];
+		let query = 'SELECT t."TransID", to_char(t."Timestamp", \'MM-DD-YY HH12:MI AM\') as tm, t."Total",';
+		query += 'c.name AS cust_name, s."StoreName", '
+		query += "(regexp_split_to_array(e.\"Name\", '\s+'))[1] AS emp_fname "
+		query += "FROM transactions t "
+		query += 'LEFT JOIN employees e ON e."EmpID" = t."EmpID"'
+		query += 'LEFT JOIN customers c ON c."CustID" = t."CustID"'
+		query += 'LEFT JOIN stores s ON s."StoreID" = t."StoreID"'
+		if(user.type !== "manager"){
+			if(user.type === 'employee'){
+				query += ' where t."EmpID" = $1;'
+			}
+			else{
+				query += ' where t."CustID" = $1;'
+			}
+			values.push(user.id);
+		}
+
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				resolve("error");
+			}else{
+				resolve(res1.rows);
+			}
+		});
+	});
+}
+
 //EXPORT===================================================================
 module.exports = {
 	login: login,
-	create_user_cust: create_user_cust
+	create_user_cust: create_user_cust,
+	get_transactions: get_transactions
 };
