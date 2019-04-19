@@ -67,7 +67,7 @@ table {
 }
   
 table, th, td {
-	border: 1px solid black;
+	border: 1px solid #555555;
 }
 
 th, td {
@@ -75,8 +75,10 @@ th, td {
 	text-align: left;
 }
 input[type=text] {
-	background-image: url('searchicon.png');
-	background-position: 10px 10px; 
-	background-repeat: no-repeat;
-	padding-left: 40px;
-  }
+	margin: 8px, 0;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2
+}

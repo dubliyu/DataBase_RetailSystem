@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History</title>
+    <link rel="stylesheet" type="text/css" href="css/transactions.css" />
+</head>
+<body>
+    <% if(user_type !== "customer") { %>
+    <div class="header" style="background-color: #7465A0">
+        <% } else { %>
+        <div class="header">
+            <% } %>
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+                <div class="links-container">
+                    <a href="/home" class="nav-link">Home</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/about" class="nav-link">About</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/stores" class="nav-link">Stores</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/profile" class="nav-link">Profile</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="#" id="logout_btn" class="nav-link">Log out</a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="content">
+            <div class="table-desc">
+                <h4>Transaction History</h4>
+            </div>
+            <table>
+                <tr>
+                    <th>Transaction #</th>
+                    <th>Timestamp</th>
+                    <th>Store</th>
+                    <th>Employee</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                </tr>
+
+                <% for(let trans of all_trans) { %>
+                <tr>
+                   <td><%= trans.TransID %></td>
+                   <td><%= trans.tm %></td>
+                   <td><%= trans.StoreName %></td>
+                   <td><%= trans.emp_fname %></td>
+                   <td><%= trans.cust_name %></td>
+                   <td><%= trans.Total %></td>
+               </tr>
+               <% } %>               
+           </table>
+       </div>
+
+       <div class="footer">
+        <nav>
+            <div class="logo-container">
+                <img src="asset/logo.png" class="logo-img">
+            </div>
+        </nav>
+    </div>
+    <script type="text/javascript" src="js/general.js"></script>
+</body>
+</html>

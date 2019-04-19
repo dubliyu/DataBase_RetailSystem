@@ -64,6 +64,17 @@ nav{
 table{
 	border-collapse: collapse;
 }
-table, th, td {
-	border:1px solid black;
+th, td {
+	padding: 15px;
+	text-align: left;
 }
+table, th, td {
+	border: 1px solid #555555;
+}
+input[type=text] {
+	margin: 8px, 0;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2
