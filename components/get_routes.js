@@ -2,12 +2,12 @@
 // File contains the GET endpoints for all pages
 
 //PUBLIC FUNCTIONS===================================================================
-function apply_get(router, cookieLogic, path, express){
+function apply_get(router, cookieLogic, path, express, db){
 	router.get("/login", (req, res) => {
 		res.sendFile(path.join(__dirname, '..', '/public/html/login.html'));
 	});
 	router.get("/home", (req, res) => {
-		let type = cookieLogic.get_user_type(req)
+		let type = cookieLogic.get_user_type(req);
 		if(type == "error"){
 			res.status(403).redirect("/login");
 		}
@@ -31,12 +31,15 @@ function apply_get(router, cookieLogic, path, express){
 			res.sendFile(path.join(__dirname, '..', '/public/html/stores.html'));
 		}
 	});
-	router.get("/transactions", (req, res) => {
-		if(cookieLogic.get_user_type(req) == "error"){
+	router.get("/transactions", async (req, res) => {
+		let user = cookieLogic.get_user(req);
+		if(user.type == "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
-			res.sendFile(path.join(__dirname, '..', '/public/html/transactions.html'));
+			let trans_arr = await db.get_transactions(user);
+			console.log(trans_arr);
+			res.render('transactions.ejs', {user_type: user.type, all_trans: trans_arr});
 		}
 	});
 	router.get("/stock", (req, res) => {

@@ -26,7 +26,7 @@ function init(app){
 	app.use("/asset", express.static(path.join(__dirname, "..", 'public/asset')));
 
 	// Define get routes
-	get_routes.apply_get(router, cookieLogic, path, express);
+	get_routes.apply_get(router, cookieLogic, path, express, db);
 
 	// Define post routes
 	login_api.apply_post(router, multer, db, cookieLogic);

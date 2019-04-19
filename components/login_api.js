@@ -6,24 +6,15 @@ function apply_post(router, multer, db, cookieLogic){
 		// Define post routes
 	router.post("/login", multer.fields([]), async (req, res) => {
 		// Attempt to login user
-		let user_type = await db.login(req.body.username, req.body.password);
+		let user = await db.login(req.body.username, req.body.password);
 		
 		// Redirect to proper page or show error
-		switch(user_type){
-			case "customer":
-				cookieLogic.create_user('customer', req);
-				res.json({success: true, redirect: "/home"});
-				break;
-			case "manager":
-			case "employee":
-				cookieLogic.create_user(user_type, req);
-				res.json({success: true, redirect: "/home"});
-				break;
-			case "error":
-				res.json({ success: false });
-				break;
-			default:
-				console.log("Unexpected user type: ", user_type);
+		if(user.type !== "customer" && user.type !== "employee" && user.type !== "manager"){
+			res.json({ success: false });
+		}
+		else{
+			cookieLogic.create_user(user.type, user.id, req);
+			res.json({success: true, redirect: "/home"});
 		}
 	});
 	router.post("/create_user", multer.fields([]), async (req, res) => {
