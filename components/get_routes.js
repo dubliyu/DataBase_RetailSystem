@@ -64,19 +64,21 @@ function apply_get(router, cookieLogic, path, express, db){
 			res.render('profile.ejs', profile);
 		}
 	});
-	router.get("/comments", (req, res) => {
+	router.get("/comments", async (req, res) => {
 		// Check if user is allowed type
-		if(cookieLogic.get_user_type(req) == "customer"){
-			res.sendFile(path.join(__dirname, '..', '/public/html/c_comments.html'));
-		}
-		else if(cookieLogic.get_user_type(req) == "manager"){
-			res.sendFile(path.join(__dirname, '..', '/public/html/m_comments.html'));
-		}
-		else if(cookieLogic.get_user_type(req) == "error"){
+		let user = cookieLogic.get_user(req);
+		if(user === "error"){
 			res.status(403).redirect("/login");
 		}
+		else if(user.type == "customer"){
+			res.render('comments.ejs', {user_type: user.type});
+		}
+		else if(user.type == "manager"){
+			let comments = await db.get_comments();
+			res.render('comments.ejs', {user_type: user.type, comments: comments});
+		}
 		else{
-			res.redirect("/home");
+			res.status(403).redirect("/home");
 		}
 	});
 }

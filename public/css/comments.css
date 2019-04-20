@@ -137,3 +137,16 @@ textarea {
 	background-color: #f8f8f8;
 	resize: none;
   }
+
+ #msg_container{
+	text-align: center;
+    padding: 15px;
+    color: salmon;
+    font-size: 1.2em;
+    border: 2px solid salmon;
+    margin-bottom: 20px;
+}
+.green{
+	color: lightgreen !important;
+    border: 2px solid darkseagreen !important;
+}
