@@ -17,7 +17,7 @@ function apply_post(router, multer, db, cookieLogic){
 			// Respond
 			if(items !== "error"){
 				// Success
-				let isCust = (user.type === "custtomer" ? "true" : "false")
+				let isCust = (user.type === "customer" ? "true" : "false")
 				res.json({items: items, isCust: isCust});
 			}else{
 				// Nothing happened
@@ -44,7 +44,7 @@ function apply_post(router, multer, db, cookieLogic){
 
 			// Attempt to update
 			let update = await db.update_item(user, item);
-			
+
 			// Respond
 			if(update !== "error"){
 				// Success
