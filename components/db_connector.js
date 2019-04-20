@@ -249,8 +249,7 @@ function get_items(dept, brand, size){
 			}
 			query += (param > 1? where + ";" : ";");
 		}
-		console.log(query, values);
-		console.log(dept, brand, size);
+		query += ' Order By "UPC"'
 
 		// Get a connection
 		let conn = GetConnector();
@@ -343,32 +342,22 @@ function update_user(user, name, email){
 	});
 }
 
-//sdfsdfsdfsdfsdfdsfdsf
 function update_item(user, item){
 	return new Promise((resolve, reject) => {
 		// Validate input
-		if(item.length === 0){
+		if(typeof item.upc === "undefined" ||
+			typeof item.size === "undefined" ||
+			typeof item.color === "undefined" ||
+			typeof item.desc === "undefined" ||
+			typeof item.brand === "undefined" ||
+			typeof item.price === "undefined"){
 			resolve("error");
 			return;
 		}
 
 		// Construct query
-		let query = '';
-		let values = [user.id];
-		if(user.type === "customer"){
-			if(typeof name === "undefined"){
-				query = 'UPDATE customers SET email=$1 WHERE "CustID"=$2;'
-				values.unshift(email);
-			}
-			else{
-				query = 'UPDATE customers SET name=$1 WHERE "CustID"=$2;'
-				values.unshift(name);
-			}
-		}
-		else{
-			query = 'UPDATE employees SET "Name"=$1 WHERE "EmpID"=$2;'
-			values.unshift(name);	
-		}
+		let query = 'update items Set "Size"=$1, "Color"=$2, "Description"=$3, "Brand"=$4, "Price"=$5 where "UPC"=$6;';
+		let values = [item.size, item.color, item.desc, item.brand, item.price, item.upc];
 
 		// Get a connection
 		let conn = GetConnector();

@@ -33,7 +33,7 @@ function apply_post(router, multer, db, cookieLogic){
 		}
 		else{
 			// Get item as obj
-			item = {
+			let item = {
 				upc: req.body.upc,
 				size: req.body.size,
 				color: req.body.color,
@@ -44,7 +44,7 @@ function apply_post(router, multer, db, cookieLogic){
 
 			// Attempt to update
 			let update = await db.update_item(user, item);
-
+			
 			// Respond
 			if(update !== "error"){
 				// Success

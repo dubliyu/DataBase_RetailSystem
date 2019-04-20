@@ -58,6 +58,11 @@ clear_btn.addEventListener('click', (event) => {
 	req.open("POST", "/item_search");
 	req.send(new FormData());
 
+	// Clear the search fields
+	document.getElementById("dept_in").value = "";
+	document.getElementById("brand_in").value = "";
+	document.getElementById("size_in").value = "";
+
 	// Handle response
 	req.onreadystatechange = function() { 
 		if (req.readyState === 4 && req.status == 200){
@@ -78,10 +83,64 @@ clear_btn.addEventListener('click', (event) => {
 		};
 });
 
-let save_btn = document.getElementById("save");
-save_btn.addEventListener('click', (event) => {
-	//TODO
-});
+let save_btns = document.getElementsByClassName("save");
+for(let save_btn of save_btns){
+	save_btn.addEventListener('click', save_item);
+}
+function save_item(event){
+	// Make form object
+	let formData = new FormData();
+	let parent = this.parentElement.parentElement;
+	let upc = parent.children[0].innerText;
+	let size = parent.children[1].firstChild.value;
+	let color = parent.children[2].firstChild.value;
+	let desc = parent.children[4].firstChild.value;
+	let brand = parent.children[5].firstChild.value;
+	let price = parent.children[6].firstChild.value;
+	
+	// Apprend to query
+	if(!upc || !size || !color || !desc || !brand || !price){
+		ShowMessage("Could Not Get the Items Properties", true);
+		return;
+	}
+	if(upc.length === 0 || size.length === 0 ||
+	 color.length === 0 || desc.length === 0 ||
+	  brand.length === 0 || price.length === 0){
+		ShowMessage("An item must have all fields filled", true);
+		return;
+	}
+	formData.append("upc", upc);
+	formData.append("size", size);
+	formData.append("color", color);
+	formData.append("desc", desc);
+	formData.append("brand", brand);
+	formData.append("price", price);
+
+	// Make post request
+	ShowMessage("Updating...", false);
+	let req = new XMLHttpRequest();
+	req.open("POST", "/update_items");
+	req.send(formData);
+
+	// Handle response
+	req.onreadystatechange = function() { 
+		if (req.readyState === 4 && req.status == 200){
+				// parse response
+				let response = req.responseText;
+				response = JSON.parse(response);
+
+				// Interpret response
+				if(typeof response.success === 'undefined'){
+					ShowMessage("Could Not Update Item " + upc.toString(), true);
+				}
+				else{
+					ShowMessage(response.success, false);
+				}
+			}else{
+				ShowMessage("Could Not Update Item " + upc.toString(), true);
+			}
+		};
+}
 
 
 function ShowMessage(msg, error){
@@ -124,6 +183,7 @@ function generate_item_elm(item, isCust){
 	let desc = document.createElement("TD");
 	let brand = document.createElement("TD");
 	let price = document.createElement("TD");
+	let edit = document.createElement("TD");
 
 	if(isCust === "false"){
 		// Create inputs
@@ -132,6 +192,7 @@ function generate_item_elm(item, isCust){
 		let desc_in = document.createElement("INPUT");
 		let brand_in = document.createElement("INPUT");
 		let price_in = document.createElement("INPUT");
+		let edit_btn = document.createElement("A");
 
 		// Stylize inputs
 		size_in.type = "text";
@@ -149,6 +210,10 @@ function generate_item_elm(item, isCust){
 		desc_in.value = (item.Description ? item.Description: "");
 		brand_in.value = (item.Brand ? item.Brand: "");
 		price_in.value = (item.Price ? item.Price: "");
+		edit_btn.href = "#";
+		edit_btn.classList.add("editbtn");
+		edit_btn.classList.add("save");
+		edit_btn.appendChild( document.createTextNode("Save"));
 
 		// Append input nodes
 		size.appendChild(size_in);
@@ -156,6 +221,7 @@ function generate_item_elm(item, isCust){
 		desc.appendChild(desc_in);
 		brand.appendChild(brand_in);
 		price.appendChild(price_in);
+		edit.appendChild(edit_btn);
 	}
 	else{
 		// Create text nodes
@@ -189,6 +255,9 @@ function generate_item_elm(item, isCust){
 	ctn.appendChild(desc);
 	ctn.appendChild(brand);
 	ctn.appendChild(price);
+	if(isCust === "false"){
+		ctn.appendChild(edit);
+	}
 
 	// Add Class to container
 	ctn.classList.add("item_row");
