@@ -13,7 +13,7 @@ function apply_post(router, multer, db, cookieLogic){
 		else{
 			// Search the store
 			let items = await db.get_items(req.body.dept, req.body.brand, req.body.size);
-			
+			console.log(items);			
 			// Respond
 			if(items !== "error"){
 				// Success

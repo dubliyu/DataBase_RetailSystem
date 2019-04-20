@@ -152,7 +152,7 @@ function get_transactions(user){
 		let values = [];
 		let query = 'SELECT t."TransID", to_char(t."Timestamp", \'MM-DD-YY HH12:MI AM\') as tm, t."Total",';
 		query += 'c.name AS cust_name, s."StoreName", '
-		query += "(regexp_split_to_array(e.\"Name\", '\s+'))[1] AS emp_fname "
+		query += 'e."Name" AS emp_fname '
 		query += "FROM transactions t "
 		query += 'LEFT JOIN employees e ON e."EmpID" = t."EmpID"'
 		query += 'LEFT JOIN customers c ON c."CustID" = t."CustID"'
@@ -247,9 +247,9 @@ function get_items(dept, brand, size){
 				param++;
 				values.push("%" + size + "%");
 			}
-			query += (param > 1? where + ";" : ";");
+			query += (param > 1? where : "");
 		}
-		query += ' Order By "UPC"'
+		query += ' Order By "UPC";'
 
 		// Get a connection
 		let conn = GetConnector();
