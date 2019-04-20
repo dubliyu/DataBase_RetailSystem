@@ -154,6 +154,7 @@ tr:nth-child(even) {
     color: salmon;
     font-size: 1.2em;
     border: 2px solid salmon;
+    margin-bottom: 20px;
 }
 .green{
 	color: lightgreen !important;

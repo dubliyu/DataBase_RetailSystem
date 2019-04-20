@@ -64,7 +64,7 @@ function remove_user(){
 	if(user_index === undefined || user_index === null){
 		return "error";
 	}
-	User_hash[req.cookies.track_id] = null;
+	delete User_hash[req.cookies.track_id];
 	Deleted_indexes.unshift(user_index);
 }
 

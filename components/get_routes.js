@@ -43,12 +43,14 @@ function apply_get(router, cookieLogic, path, express, db){
 			res.render('transactions.ejs', {user_type: user.type, all_trans: trans_arr});
 		}
 	});
-	router.get("/stock", (req, res) => {
-		if(cookieLogic.get_user_type(req) == "error"){
+	router.get("/stock", async (req, res) => {
+		let user = cookieLogic.get_user(req);
+		if(user === "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
-			res.sendFile(path.join(__dirname, '..', '/public/html/stock.html'));
+			let items = await db.get_items(undefined, undefined, undefined);
+			res.render('stock.ejs', {user_type: user.type, items: items});
 		}
 	});
 	router.get("/profile", async (req, res) => {
@@ -64,9 +66,11 @@ function apply_get(router, cookieLogic, path, express, db){
 	});
 	router.get("/comments", (req, res) => {
 		// Check if user is allowed type
-		if(cookieLogic.get_user_type(req) == "customer" ||
-			cookieLogic.get_user_type(req) == "manager"){
-			res.sendFile(path.join(__dirname, '..', '/public/html/comments.html'));
+		if(cookieLogic.get_user_type(req) == "customer"){
+			res.sendFile(path.join(__dirname, '..', '/public/html/c_comments.html'));
+		}
+		else if(cookieLogic.get_user_type(req) == "manager"){
+			res.sendFile(path.join(__dirname, '..', '/public/html/m_comments.html'));
 		}
 		else if(cookieLogic.get_user_type(req) == "error"){
 			res.status(403).redirect("/login");

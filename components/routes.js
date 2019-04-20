@@ -9,6 +9,8 @@ const cookieLogic = require("./cookie_logic");
 const multer = require('multer')();
 const login_api = require('./login_api');
 const profile_api = require('./profile_api');
+const stores_api = require('./stores_api');
+const items_api = require('./items_api');
 const get_routes = require('./get_routes');
 const cookie_parser = require('cookie-parser');
 
@@ -32,6 +34,8 @@ function init(app){
 	// Define post routes
 	login_api.apply_post(router, multer, db, cookieLogic);
 	profile_api.apply_post(router, multer, db, cookieLogic);
+	stores_api.apply_post(router, multer, db, cookieLogic);
+	items_api.apply_post(router, multer, db, cookieLogic);
 
 	// Catch all --> send home
 	router.get('/*', (req,res) => {

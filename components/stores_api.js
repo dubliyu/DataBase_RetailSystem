@@ -1,26 +1,26 @@
 'use strict';
-// File contains the POST endpoints for the profile page
+// File contains the POST endpoints for the store search page
 
 //PUBLIC FUNCTIONS===================================================================
 function apply_post(router, multer, db, cookieLogic){
 	// Define post routes
-	router.post("/update_profile", multer.fields([]), async (req, res) => {
+	router.post("/store_search", multer.fields([]), async (req, res) => {
 		// Get the user
 		let user = cookieLogic.get_user(req);
 		if(user === "error"){
-			res.json({});
+			res.json({success: "error"});
 		}
 		else{
-			// Attempt to update
-			let update = await db.update_user(user, req.body.name, req.body.email);
-
+			// Search the store
+			let stores = await db.get_stores(req.body.name, req.body.state);
+			
 			// Respond
-			if(update !== "error"){
+			if(stores !== "error"){
 				// Success
-				res.json({success: "User has been updated"});
+				res.json({stores: stores});
 			}else{
 				// Nothing happened
-				res.json({});
+				res.json({success: "error"});
 			}
 		}
 	});

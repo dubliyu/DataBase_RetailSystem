@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Item Catalog</title>
+        <link rel="stylesheet" type="text/css" href="css/stock.css" />
+    </head>
+    <body>
+        <% if(user_type !== "customer") { %> 
+            <div class="header" style="background-color: #7465A0">
+        <% } else { %>
+            <div class="header">
+        <% } %>
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+                <div class="links-container">
+                    <a href="/home" class="nav-link">Home</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/about" class="nav-link">About</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/stores" class="nav-link">Stores</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/profile" class="nav-link">Profile</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="#" id="logout_btn" class="nav-link">Log out</a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="content">
+            <div class="table-desc">
+                <h4>Item Catalog</h4>
+                <div id='msg_container' style="display:none;"></div>
+            </div>
+            <div class="search-desc">
+                <form>
+                    <input id="dept_in" class="search-bars" name="item_dept" value="" placeholder="Search by Department">
+                    <input id="brand_in" class="search-bars" name="item_brand" value="" placeholder="Search by Brand">
+                    <input id="size_in" class="search-bars" name="item_size" value="" placeholder="Search by Size">
+                    <a href="#" id="clear" class="editbtn clear">Clear</a>
+                    <a href="#" id="search" class="editbtn">Search</a>
+                </form>
+                <br>
+            </div>
+            <table id="items_ctn">
+                <form>
+                <tr>
+                    <th>UPC</th>
+                    <th>Size</th>
+                    <th>Color</th>
+                    <th>Department</th>
+                    <th>Description</th>
+                    <th>Brand</th>
+                    <th>Price</th>
+                    <% if(user_type !== "customer") { %> 
+                        <th>Edit</th>
+                    <% } %> 
+                </tr>
+                <% if(user_type === "customer") { %> 
+
+                    <% for(let item of items) { %>
+                        <tr class="item_row">
+                            <td><%= item.UPC %></td>
+                            <td><%= item.Size %></td>
+                            <td><%= item.Color %></td>
+                            <td><%= item.Department %></td>
+                            <td><%= item.Description %></td>
+                            <td><%= item.Brand %></td>
+                            <td><%= item.Price %></td>
+                        </tr>
+                    <% } %>                  
+    
+                <% } else { %>
+
+                    <% for(let item of items) { %>
+                        <tr class="item_row">
+                            <td><%= item.UPC %></td>
+                            <td><input type="text" name="input_size" value="<%= item.Size %>"></td>
+                            <td><input type="text" name="input_color" value="<%= item.Color %>"></td>
+                            <td><%= item.Department %></td>
+                            <td><input type="text" name="input_desc" value="<%= item.Description %>"></td>
+                            <td><input type="text" name="input_brand" value="<%= item.Brand %>"></td>
+                            <td><input type="text" name="input_price" value="<%= item.Price %>"></td>
+                            <td><a href="#" id="save" class="editbtn save" data-upc="<%= item.UPC %>">Save</a></td>
+                        </tr>
+                    <% } %>  
+
+                <% } %>
+
+                </form>            
+            </table>
+        </div>
+
+        <div class="footer">
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+            </nav>
+        </div>
+        <script type="text/javascript" src="js/general.js"></script>
+        <script type="text/javascript" src="js/stock.js"></script>
+    </body>
+</html>

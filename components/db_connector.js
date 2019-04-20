@@ -181,24 +181,24 @@ function get_transactions(user){
 	});
 }
 
-function get_stores(state, name){
+function get_stores(name, state){
 	return new Promise((resolve, reject) => {
 		// Construct query
 		let query = 'select * from stores ';
+		let where = "where "
 		let values = [];
 		if(state || name){
-			where = "where "
 			if(state && name){
-				where += '"State"=$1 and "StoreName"=$2'
-				values.push(state, name);
+				where += '"State" like $1 and "StoreName" like $2'
+				values.push("%" + state + "%", "%" + name + "%");
 			}
 			else if(state){
-				where += '"State"=$1';
-				values.push(state);
+				where += '"State" like $1';
+				values.push("%" + state + "%");
 			}
 			else if(name){
-				where += '"StoreName"=$1';
-				values.push(name);
+				where += '"StoreName" like $1';
+				values.push("%" + name + "%");
 			}
 			else{
 				where = "";
@@ -206,13 +206,58 @@ function get_stores(state, name){
 			query += where + ";";
 		}
 
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1){
+				resolve("error");
+			}else{
+				resolve(res1.rows);
+			}
+		});
+	});
+}
+
+function get_items(dept, brand, size){
+	return new Promise((resolve, reject) => {
+		// Construct query
+		let query = 'select * from items ';
+		let param = 1;
+		let where = "where "
+		let values = [];
+
+		// For searching
+		if(dept || brand || size){
+			if(dept){
+				where += ' "Department" like $' + param.toString() + " ";
+				param++;
+				values.push("%" + dept + "%");
+			}
+			if(brand){
+				where += (param > 1 ? " and " : "");
+				where += ' "Brand" like $' + param.toString() + " ";
+				param++;
+				values.push("%" + brand + "%");
+			}
+			if(size){
+				where += (param > 1 ? " and " : "");
+				where += ' "Size" like $' + param.toString() + " ";
+				param++;
+				values.push("%" + size + "%");
+			}
+			query += (param > 1? where + ";" : ";");
+		}
+		console.log(query, values);
+		console.log(dept, brand, size);
 
 		// Get a connection
 		let conn = GetConnector();
 
 		// Make a query
 		conn.query(query, values, (err1, res1) => {
-			if(err1 ){
+			if(err1){
 				resolve("error");
 			}else{
 				resolve(res1.rows);
@@ -298,6 +343,46 @@ function update_user(user, name, email){
 	});
 }
 
+//sdfsdfsdfsdfsdfdsfdsf
+function update_item(user, item){
+	return new Promise((resolve, reject) => {
+		// Validate input
+		if(item.length === 0){
+			resolve("error");
+			return;
+		}
+
+		// Construct query
+		let query = '';
+		let values = [user.id];
+		if(user.type === "customer"){
+			if(typeof name === "undefined"){
+				query = 'UPDATE customers SET email=$1 WHERE "CustID"=$2;'
+				values.unshift(email);
+			}
+			else{
+				query = 'UPDATE customers SET name=$1 WHERE "CustID"=$2;'
+				values.unshift(name);
+			}
+		}
+		else{
+			query = 'UPDATE employees SET "Name"=$1 WHERE "EmpID"=$2;'
+			values.unshift(name);	
+		}
+
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				resolve("error");
+			}else{
+				resolve("success");
+			}
+		});
+	});
+}
 //EXPORT===================================================================
 module.exports = {
 	login: login,
@@ -305,5 +390,7 @@ module.exports = {
 	get_transactions: get_transactions,
 	get_profile: get_profile,
 	update_user: update_user,
-	get_stores: get_stores
+	get_stores: get_stores,
+	get_items: get_items,
+	update_item: update_item
 };
