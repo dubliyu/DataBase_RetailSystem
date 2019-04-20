@@ -291,6 +291,22 @@ function get_profile(user){
 	});
 }
 
+function get_comments(){
+	return new Promise((resolve, reject) => {
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query('SELECT *, to_char(Timestamp, \'MM-DD-YY HH12:MI AM\') as tm FROM comments;', (err1, res1) => {
+			if(err1){
+				resolve("error");
+			}else{
+				resolve(res1.rows);
+			}
+		});
+	});
+}
+
 function update_user(user, name, email){
 	return new Promise((resolve, reject) => {
 		// Validate input
@@ -372,6 +388,33 @@ function update_item(user, item){
 		});
 	});
 }
+
+function insert_comment(comment){
+	return new Promise((resolve, reject) => {
+		// Validate input
+		if(typeof comment === "undefined" || comment.length ===0){
+			resolve("error");
+			return;
+		}
+
+		// Construct query
+		let query = 'insert into comments (comment) values($1);';
+		let values = [comment];
+
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				resolve("error");
+			}else{
+				resolve("success");
+			}
+		});
+	});
+}
+
 //EXPORT===================================================================
 module.exports = {
 	login: login,
@@ -381,5 +424,7 @@ module.exports = {
 	update_user: update_user,
 	get_stores: get_stores,
 	get_items: get_items,
-	update_item: update_item
+	update_item: update_item,
+	get_comments: get_comments,
+	insert_comment: insert_comment
 };
