@@ -36,6 +36,7 @@
             </div>
             <div class="search-desc">
                 <form>
+                    <input id="dept_in" class="search-bars" name="item_store" value="" placeholder="Search by Store Number">
                     <input id="dept_in" class="search-bars" name="item_dept" value="" placeholder="Search by Department">
                     <input id="brand_in" class="search-bars" name="item_brand" value="" placeholder="Search by Brand">
                     <input id="size_in" class="search-bars" name="item_size" value="" placeholder="Search by Size">
@@ -55,6 +56,8 @@
                     <th>Description</th>
                     <th>Brand</th>
                     <th>Price</th>
+                    <th>Store</th>
+                    <th>Qty</th>
                     <% if(user_type !== "customer") { %> 
                         <th>Edit</th>
                     <% } %> 
