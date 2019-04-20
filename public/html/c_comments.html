@@ -1,9 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
+        <meta charset="UTF-8">
+        <title>Comment</title>
+        <link rel="stylesheet" type="text/css" href="css/comments.css" />
     </head>
     <body>
+        <!-- <% if(user_type !== "customer") { %> 
+            <div class="header" style="background-color: #7465A0">
+        <% } else { %> -->
+            <div class="header">
+        <!--<% } %>-->
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+                <div class="links-container">
+                    <a href="/home" class="nav-link">Home</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/about" class="nav-link">About</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/stores" class="nav-link">Stores</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="/profile" class="nav-link">Profile</a>
+                    <div class='link-border'>&nbsp;</div>
+                    <a href="#" id="logout_btn" class="nav-link">Log out</a>
+                </div>
+            </nav>
+        </div>
 
+        <div class="content">
+            <div class="table-desc">
+                <h4>Make a Comment</h4>
+                <h6>We at Simba's Department Store want your honest feedback about your experience here. </h6> 
+                <h6>Please mention any and all feedback you can think of.</h6>
+            </div>
+            <div class="textbox-desc">
+            </div>
+            <textarea rows="8" cols="50" maxlength="300" wrap="hard"></textarea>
+            <br>
+            <a href="" class="editbtn">Submit</a>
+        </div>
+
+        <div class="footer">
+            <nav>
+                <div class="logo-container">
+                    <img src="asset/logo.png" class="logo-img">
+                </div>
+            </nav>
+        </div>
+        <script type="text/javascript" src="js/general.js"></script>
     </body>
 </html>
