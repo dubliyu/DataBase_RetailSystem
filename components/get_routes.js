@@ -15,12 +15,13 @@ function apply_get(router, cookieLogic, path, express, db){
 			res.render('home.ejs', {user_type: type});
 		}
 	});
-	router.get("/about", (req, res) => {
-		if(cookieLogic.get_user_type(req) == "error"){
+	router.get("/about", async (req, res) => {
+		let user = cookieLogic.get_user(req);
+		if(user === "error"){
 			res.status(403).redirect("/login");
 		}
 		else{
-			res.sendFile(path.join(__dirname, '..', '/public/html/about.html'));
+			res.render('about.ejs', {user_type: user.type});
 		}
 	});
 	router.get("/stores", async (req, res) => {
