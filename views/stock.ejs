@@ -36,7 +36,7 @@
             </div>
             <div class="search-desc">
                 <form>
-                    <input id="dept_in" class="search-bars" name="item_store" value="" placeholder="Search by Store Number">
+                    <input id="store_in" class="search-bars" name="item_store" value="" placeholder="Search by Store Number">
                     <input id="dept_in" class="search-bars" name="item_dept" value="" placeholder="Search by Department">
                     <input id="brand_in" class="search-bars" name="item_brand" value="" placeholder="Search by Brand">
                     <input id="size_in" class="search-bars" name="item_size" value="" placeholder="Search by Size">
@@ -73,6 +73,8 @@
                             <td><%= item.Description %></td>
                             <td><%= item.Brand %></td>
                             <td><%= item.Price %></td>
+                            <td><%= item.StoreID %></td>
+                            <td><%= item.Qty %></td>
                         </tr>
                     <% } %>                  
     
@@ -87,7 +89,10 @@
                             <td><input type="text" name="input_desc" value="<%= item.Description %>"></td>
                             <td><input type="text" name="input_brand" value="<%= item.Brand %>"></td>
                             <td><input type="text" name="input_price" value="<%= item.Price %>"></td>
+                            <td><%= item.StoreID %></td>
+                            <td><input type="text" name="input_qty" value="<%= item.Qty %>" disabled></td>
                             <td><a href="#" class="editbtn save">Save</a></td>
+                            <td><a href="#" class="editbtn qty">Edit Qty</a></td>
                         </tr>
                     <% } %>  
 

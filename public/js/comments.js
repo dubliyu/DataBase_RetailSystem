@@ -29,6 +29,7 @@ submit_btn.addEventListener('click', (event) => {
 				// Interpret response
 				if(typeof response.success === 'string' && response.success === 'success'){
 					ShowMessage("Comment has been Saved", false);
+					window.location = "/home";
 				}
 				else{
 					ShowMessage("Could Not Save Comment", true);

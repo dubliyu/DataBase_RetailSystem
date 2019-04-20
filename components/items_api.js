@@ -12,8 +12,8 @@ function apply_post(router, multer, db, cookieLogic){
 		}
 		else{
 			// Search the store
-			let items = await db.get_items(req.body.dept, req.body.brand, req.body.size);
-			console.log(items);			
+			let items = await db.get_items(user, req.body.store, req.body.dept, req.body.brand, req.body.size);
+
 			// Respond
 			if(items !== "error"){
 				// Success
@@ -44,6 +44,33 @@ function apply_post(router, multer, db, cookieLogic){
 
 			// Attempt to update
 			let update = await db.update_item(user, item);
+
+			// Respond
+			if(update !== "error"){
+				// Success
+				res.json({success: `Item ${item.upc} has been updated`});
+			}else{
+				// Nothing happened
+				res.json({});
+			}
+		}
+	});
+	router.post("/update_stock", multer.fields([]), async (req, res) => {
+		// Get the user
+		let user = cookieLogic.get_user(req);
+		if(user === "error" || user.type === "customer"){
+			res.json({});
+		}
+		else{
+			// Get item as obj
+			let item = {
+				upc: req.body.upc,
+				store: req.body.store,
+				qty: req.body.qty
+			};
+
+			// Attempt to update
+			let update = await db.update_stock(user, item);
 
 			// Respond
 			if(update !== "error"){

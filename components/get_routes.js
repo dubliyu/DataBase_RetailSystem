@@ -49,7 +49,7 @@ function apply_get(router, cookieLogic, path, express, db){
 			res.status(403).redirect("/login");
 		}
 		else{
-			let items = await db.get_items(undefined, undefined, undefined);
+			let items = await db.get_items(user, undefined, undefined, undefined, undefined);
 			res.render('stock.ejs', {user_type: user.type, items: items});
 		}
 	});

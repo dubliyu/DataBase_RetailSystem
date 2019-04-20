@@ -220,36 +220,54 @@ function get_stores(name, state){
 	});
 }
 
-function get_items(dept, brand, size){
+function get_items(user, store, dept, brand, size){
 	return new Promise((resolve, reject) => {
 		// Construct query
-		let query = 'select * from items ';
+		let query = 'select * from items i JOIN instock s ON i."UPC" = s."UPC" JOIN stores o ON s."StoreID" = o."StoreID" ';
 		let param = 1;
 		let where = "where "
 		let values = [];
 
+		// Change query for employees
+		if(user.type === "employee"){
+			query = 'SELECT * FROM users u JOIN employees e ON e."EmpID" = u.empid JOIN items i ON i."Department" = e."Department" JOIN instock s ON s."UPC" = i."UPC" ';
+			where += " u.empid=$"+ param.toString() + " ";
+			values.push(user.id);
+			param++;
+		}
+
 		// For searching
-		if(dept || brand || size){
+		if(dept || brand || size || store){
 			if(dept){
-				where += ' "Department" like $' + param.toString() + " ";
+				where += (param > 1 ? " and " : "");
+				where += ' i."Department" like $' + param.toString() + " ";
 				param++;
 				values.push("%" + dept + "%");
 			}
 			if(brand){
 				where += (param > 1 ? " and " : "");
-				where += ' "Brand" like $' + param.toString() + " ";
+				where += ' i."Brand" like $' + param.toString() + " ";
 				param++;
 				values.push("%" + brand + "%");
 			}
 			if(size){
 				where += (param > 1 ? " and " : "");
-				where += ' "Size" like $' + param.toString() + " ";
+				where += ' i."Size" like $' + param.toString() + " ";
 				param++;
 				values.push("%" + size + "%");
 			}
+			if(store){
+				where += (param > 1 ? " and " : "");
+				where += ' s."StoreID"= $' + param.toString() + " ";
+				param++;
+				values.push(store);
+			}
 			query += (param > 1? where : "");
 		}
-		query += ' Order By "UPC";'
+		if(user.type === "employee" && param === 2){
+			query += where;
+		}
+		query += ' Order By i."UPC";'
 
 		// Get a connection
 		let conn = GetConnector();
@@ -389,6 +407,37 @@ function update_item(user, item){
 	});
 }
 
+function update_stock(user, item){
+	return new Promise((resolve, reject) => {
+		// Validate input
+		console.log(user, item);
+		if(typeof item.upc === "undefined" ||
+			typeof item.store === "undefined" ||
+			typeof item.qty === "undefined"){
+			resolve("error");
+			return;
+		}
+
+		// Construct query
+		let query = 'update instock Set "Qty"=$1 where "UPC"=$2 and "StoreID"=$3;';
+		let values = [item.qty, item.upc, item.store];
+		console.log(query, values)
+
+		// Get a connection
+		let conn = GetConnector();
+
+		// Make a query
+		conn.query(query, values, (err1, res1) => {
+			if(err1 ){
+				console.log("bad",err1);
+				resolve("error");
+			}else{
+				resolve("success");
+			}
+		});
+	});
+}
+
 function insert_comment(comment){
 	return new Promise((resolve, reject) => {
 		// Validate input
@@ -425,6 +474,7 @@ module.exports = {
 	get_stores: get_stores,
 	get_items: get_items,
 	update_item: update_item,
+	update_stock: update_stock,
 	get_comments: get_comments,
 	insert_comment: insert_comment
 };
