@@ -77,7 +77,7 @@ if(email_edit !== null){
 function Disable_and_wait(){
 	// Disable buttons
 	let edit_btns = document.getElementsByClassName("editbtn");
-	for(btn of edit_btns){
+	for(let btn of edit_btns){
 		btn.disabled = true;
 	}
 
@@ -91,7 +91,7 @@ function Disable_and_wait(){
 function Enable_and_Message(msg, error){
 	// Enable Buttons
 	let edit_btns = document.getElementsByClassName("editbtn");
-	for(btn of edit_btns){
+	for(let btn of edit_btns){
 		btn.disabled = false;
 	}
 
