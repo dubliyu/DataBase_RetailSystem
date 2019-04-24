@@ -124,8 +124,8 @@ function generate_store_elm(store){
 	let store_txt = document.createTextNode((store.StoreName? store.StoreName: ""));  
 	let city_txt = document.createTextNode((store.City? store.City: ""));  
 	let state_txt = document.createTextNode((store.State? store.State: ""));  
-	let rating_txt = document.createTextNode((store.Rating? store.Rating: ""));  
-	let year_txt = document.createTextNode((store.YearFounded? store.YearFounded: ""));  
+	let rating_txt = document.createTextNode((store.rating? store.rating: ""));  
+	let year_txt = document.createTextNode((store.year? store.year: ""));  
 
 	// Apend text nodes
 	id.appendChild(id_txt);
